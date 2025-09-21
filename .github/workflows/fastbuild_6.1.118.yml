@@ -466,7 +466,7 @@ jobs:
             unzip -q master.zip
             mv "Baseband-guard-master" baseband-guard
             printf '\nobj-$(CONFIG_BBG) += baseband-guard/\n' >> ./Makefile
-            read -r -d '' MKFILEFIX <<-'EOF'
+            read -r -d '' MKFILEFIX <<'EOF'
             ifneq ($(CONFIG_BBG),)
                 $(eval $(call add-prereq,security/selinux/selinuxfs.o,security/baseband-guard/.selinuxfs_patched))
             endif

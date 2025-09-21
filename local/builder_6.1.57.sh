@@ -302,7 +302,7 @@ if [[ "$APPLY_BBG" == "y" || "$APPLY_BBG" == "Y" ]]; then
   unzip -q master.zip
   mv "Baseband-guard-master" baseband-guard
   printf '\nobj-$(CONFIG_BBG) += baseband-guard/\n' >> ./Makefile
-  read -r -d '' TEXT_TO_INSERT <<-'EOF'
+  read -r -d '' TEXT_TO_INSERT <<'EOF'
   ifneq ($(CONFIG_BBG),)
       $(eval $(call add-prereq,security/selinux/selinuxfs.o,security/baseband-guard/.selinuxfs_patched))
   endif
