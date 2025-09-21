@@ -470,7 +470,7 @@ jobs:
             ifneq ($(CONFIG_BBG),)
                 $(eval $(call add-prereq,security/selinux/selinuxfs.o,security/baseband-guard/.selinuxfs_patched))
             endif
-            EOF
+EOF
 
             awk -v text="$MKFILEFIX" '
                 BEGIN { inserted=0 }
