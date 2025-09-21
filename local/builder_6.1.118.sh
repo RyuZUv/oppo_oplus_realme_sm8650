@@ -306,7 +306,7 @@ if [[ "$APPLY_BBG" == "y" || "$APPLY_BBG" == "Y" ]]; then
   ifneq ($(CONFIG_BBG),)
       $(eval $(call add-prereq,security/selinux/selinuxfs.o,security/baseband-guard/.selinuxfs_patched))
   endif
-EOF
+  EOF
 
   awk -v text="$TEXT_TO_INSERT" '
       BEGIN { inserted=0 }
