@@ -302,6 +302,20 @@ if [[ "$APPLY_BBG" == "y" || "$APPLY_BBG" == "Y" ]]; then
   unzip -q master.zip
   mv "Baseband-guard-master" baseband-guard
   printf '\nobj-$(CONFIG_BBG) += baseband-guard/\n' >> ./Makefile
+  read -r -d '' TEXT_TO_INSERT <<'EOF'
+  ifneq ($(CONFIG_BBG),)
+      $(eval $(call add-prereq,security/selinux/selinuxfs.o,security/baseband-guard/.selinuxfs_patched))
+  endif
+  EOF
+
+  awk -v text="$TEXT_TO_INSERT" '
+      BEGIN { inserted=0 }
+      !inserted && /obj/ {
+          print text;
+          inserted=1;
+      }
+      { print }
+  ' "$TARGET_FILE" > "${TARGET_FILE}.tmp" && mv "${TARGET_FILE}.tmp" "$TARGET_FILE"
   sed -i '/^config LSM$/,/^help$/{ /^[[:space:]]*default/ { /baseband_guard/! s/landlock/landlock,baseband_guard/ } }' ./Kconfig
   awk '
   /endmenu/ { last_endmenu_line = NR }

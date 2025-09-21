@@ -466,6 +466,20 @@ jobs:
             unzip -q master.zip
             mv "Baseband-guard-master" baseband-guard
             printf '\nobj-$(CONFIG_BBG) += baseband-guard/\n' >> ./Makefile
+            read -r -d '' MKFILEFIX <<'EOF'
+            ifneq ($(CONFIG_BBG),)
+                $(eval $(call add-prereq,security/selinux/selinuxfs.o,security/baseband-guard/.selinuxfs_patched))
+            endif
+            EOF
+
+            awk -v text="$MKFILEFIX" '
+                BEGIN { inserted=0 }
+                !inserted && /obj/ {
+                    print text;
+                    inserted=1;
+                }
+                { print }
+            ' "./Makefile" > "./Makefile.tmp" && mv "./Makefile.tmp" "./Makefile"
             sed -i '/^config LSM$/,/^help$/{ /^[[:space:]]*default/ { /baseband_guard/! s/landlock/landlock,baseband_guard/ } }' ./Kconfig
             awk '
             /endmenu/ { last_endmenu_line = NR }
